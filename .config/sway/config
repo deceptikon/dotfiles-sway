@@ -1,0 +1,365 @@
+# Default config for sway
+#
+# Copy this to ~/.config/sway/config and edit it to your liking.
+#
+# Read `man 5 sway` for a complete reference.
+
+### Variables
+#
+# Logo key. Use Mod1 for Alt.
+set $mod Mod4
+# Home row direction keys, like vim
+set $left h
+set $down j
+set $up k
+set $right l
+# Your preferred terminal emulator
+set $term kitty
+# layout insensitive binding
+set $mybind bindsym --to-code
+
+# Your preferred application launcher
+# Note: pass the final command to swaymsg so that the resulting window can be opened
+# on the original workspace that the command was run on.
+# set $menu dmenu_path | dmenu | xargs swaymsg exec --
+set $menu wofi --show=drun --lines=8 --prompt=""
+
+font pango:TerminessTTF Nerd Font Mono 14px
+
+### Output configuration
+#
+# Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
+output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
+#
+# Example configuration:
+#
+output eDP-1 mode 3200x1800 position 0,0
+output DP-1 mode 2560x1440 position 1600,0
+#
+# You can get the names of your outputs by running: swaymsg -t get_outputs
+
+### Idle configuration
+#
+# Example configuration:
+#
+exec swayidle -w \
+         timeout 300 'swaylock \
+	--screenshots \
+	--clock \
+	--indicator \
+	--indicator-radius 80 \
+	--indicator-thickness 4 \
+	--effect-blur 7x5 \
+	--effect-vignette 0.5:0.5 \
+	--ring-color bb00cc \
+	--key-hl-color 880033 \
+	--line-color 00000000 \
+	--inside-color 00000088 \
+	--separator-color 00000000 \
+	--grace 10 \
+	--fade-in 0.2' \
+         timeout 600 'swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"' \
+         before-sleep 'swaylock -f -c 000000'
+#
+# This will lock your screen after 300 seconds of inactivity, then turn off
+# your displays after another 300 seconds, and turn your screens back on when
+# resumed. It will also lock your screen before your computer goes to sleep.
+
+### Input configuration
+
+input type:touchpad {
+    dwt enabled
+    tap enabled
+    natural_scroll disabled
+    middle_emulation enabled
+}
+
+input type:keyboard {
+    xkb_layout us,ru
+    xkb_variant ,
+    xkb_options grp:caps_toggle
+}
+#
+# You can get the names of your inputs by running: swaymsg -t get_inputs
+# Read `man 5 sway-input` for more information about this section.
+
+### Key bindings
+#
+# Basics:
+#
+    # Start a terminal
+    $mybind $mod+Return exec $term
+
+    # Kill focused window
+    $mybind $mod+Shift+q kill
+
+    # Start your launcher
+    $mybind $mod+space exec $menu
+
+    # Drag floating windows by holding down $mod and left mouse button.
+    # Resize them with right mouse button + $mod.
+    # Despite the name, also works for non-floating windows.
+    # Change normal to inverse to use left mouse button for resizing and right
+    # mouse button for dragging.
+    floating_modifier $mod normal
+
+    # Reload the configuration file
+    $mybind $mod+Shift+c reload
+
+    # Exit sway (logs you out of your Wayland session)
+    $mybind $mod+Shift+e exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -b 'Yes, exit sway' 'swaymsg exit'
+#
+# Moving around:
+#
+    # Move your focus around
+    $mybind $mod+$left focus left
+    $mybind $mod+$down focus down
+    $mybind $mod+$up focus up
+    $mybind $mod+$right focus right
+    # Or use $mod+[up|down|left|right]
+    $mybind $mod+Left focus left
+    $mybind $mod+Down focus down
+    $mybind $mod+Up focus up
+    $mybind $mod+Right focus right
+
+    # Move the focused window with the same, but add Shift
+    $mybind $mod+Shift+$left move left
+    $mybind $mod+Shift+$down move down
+    $mybind $mod+Shift+$up move up
+    $mybind $mod+Shift+$right move right
+    # Ditto, with arrow keys
+    $mybind $mod+Shift+Left move left
+    $mybind $mod+Shift+Down move down
+    $mybind $mod+Shift+Up move up
+    $mybind $mod+Shift+Right move right
+#
+# Workspaces:
+#
+
+    set $ws1 1
+    set $ws2 2
+    set $ws3 3
+    set $ws4 4
+    set $ws5 5
+    set $ws6 6
+    set $ws7 7
+    set $ws8 8
+    set $ws9 9
+    set $ws0 
+
+    # switch to workspace
+    $mybind $mod+1 workspace $ws1
+    $mybind $mod+2 workspace $ws2
+    $mybind $mod+3 workspace $ws3
+    $mybind $mod+4 workspace $ws4
+    $mybind $mod+5 workspace $ws5
+    $mybind $mod+6 workspace $ws6
+    $mybind $mod+7 workspace $ws7
+    $mybind $mod+8 workspace $ws8
+    $mybind $mod+9 workspace $ws9
+    $mybind $mod+0 workspace $ws0
+
+    # Move focused container to workspace
+    $mybind $mod+Ctrl+1 move container to workspace $ws1
+    $mybind $mod+Ctrl+2 move container to workspace $ws2
+    $mybind $mod+Ctrl+3 move container to workspace $ws3
+    $mybind $mod+Ctrl+4 move container to workspace $ws4
+    $mybind $mod+Ctrl+5 move container to workspace $ws5
+    $mybind $mod+Ctrl+6 move container to workspace $ws6
+    $mybind $mod+Ctrl+7 move container to workspace $ws7
+    $mybind $mod+Ctrl+8 move container to workspace $ws8
+    $mybind $mod+Ctrl+9 move container to workspace $ws9
+    $mybind $mod+Ctrl+0 move container to workspace $ws0
+
+    # Move to workspace with focused container
+    $mybind $mod+Shift+1 move container to workspace $ws1; workspace $ws1
+    $mybind $mod+Shift+2 move container to workspace $ws2; workspace $ws2
+    $mybind $mod+Shift+3 move container to workspace $ws3; workspace $ws3
+    $mybind $mod+Shift+4 move container to workspace $ws4; workspace $ws4
+    $mybind $mod+Shift+5 move container to workspace $ws5; workspace $ws5
+    $mybind $mod+Shift+6 move container to workspace $ws6; workspace $ws6
+    $mybind $mod+Shift+7 move container to workspace $ws7; workspace $ws7
+    $mybind $mod+Shift+8 move container to workspace $ws8; workspace $ws8
+    $mybind $mod+Shift+9 move container to workspace $ws9; workspace $ws9
+    $mybind $mod+Shift+0 move container to workspace $ws0; workspace $ws0
+
+    workspace_auto_back_and_forth yes
+
+    # move windows to workspaces
+    $mybind $mod+Ctrl+Left move workspace to output left
+    $mybind $mod+Ctrl+Right move workspace to output right
+
+    # Open applications on specific workspaces
+    # assign [class="Thunderbird"] $ws1
+    # assign [class="Pale moon"] $ws2
+    # assign [class="Pcmanfm"] $ws3
+    # assign [class="Skype"] $ws5
+
+    # Open specific applications in floating mode
+    for_window [title="alsamixer"] floating enable border pixel 1
+    for_window [app_id="nm-connection-editor"] floating enable border normal
+    for_window [app_id="pavucontrol"] floating enable
+    for_window [class="Clipgrab"] floating enable
+    for_window [title="File Transfer*"] floating enable
+    for_window [class="fpakman"] floating enable
+    for_window [class="Galculator"] floating enable border pixel 1
+    for_window [class="GParted"] floating enable border normal
+    for_window [title="i3_help"] floating enable sticky enable border normal
+    for_window [class="Lightdm-settings"] floating enable
+    for_window [class="Lxappearance"] floating enable sticky enable border normal
+    for_window [title="MuseScore: Play Panel"] floating enable
+    for_window [class="Nitrogen"] floating enable sticky enable border normal
+    for_window [class="Oblogout"] fullscreen enable
+    for_window [class="octopi"] floating enable
+    for_window [title="About Pale Moon"] floating enable
+    for_window [app_id="pamac-manager"] floating enable
+    for_window [class="qt5ct"] floating enable sticky enable border normal
+    for_window [class="Qtconfig-qt4"] floating enable sticky enable border normal
+    for_window [class="Simple-scan"] floating enable border normal
+    for_window [class="(?i)System-config-printer.py"] floating enable border normal
+    for_window [class="Skype"] floating enable border normal
+    for_window [class="Timeset-gui"] floating enable border normal
+    for_window [class="(?i)virtualbox"] floating enable border normal
+    for_window [class="Xfburn"] floating enable
+    for_window [window_role="pop-up"] floating enable
+
+
+    # telegram related settings
+    $mybind $mod+grave [app_id="telegramdesktop"] scratchpad show
+
+    for_window [app_id="telegramdesktop"] floating enable
+    for_window [app_id="telegramdesktop" title="Telegram"] move scratchpad
+
+# switch to workspace with urgent window automatically
+for_window [urgent=latest] focus
+#
+# Layout stuff:
+#
+    # You can "split" the current object of your focus with
+    # $mod+b or $mod+v, for horizontal and vertical splits
+    # respectively.
+    $mybind $mod+b splith
+    $mybind $mod+v splitv
+
+    # Switch the current container between different layout styles
+    $mybind $mod+s layout stacking
+    $mybind $mod+w layout tabbed
+    $mybind $mod+e layout toggle split
+
+    # Make the current focus fullscreen
+    $mybind $mod+f fullscreen
+
+    # Toggle the current focus between tiling and floating mode
+    $mybind $mod+Shift+space floating toggle
+
+    # Swap focus between the tiling area and the floating area
+    # $mybind $mod+space focus mode_toggle
+
+    # Move focus to the parent container
+    $mybind $mod+a focus parent
+#
+# Scratchpad:
+#
+    # Sway has a "scratchpad", which is a bag of holding for windows.
+    # You can send windows there and get them back later.
+
+    # Move the currently focused window to the scratchpad
+    $mybind $mod+Shift+minus move scratchpad
+
+    # Show the next scratchpad window or hide the focused scratchpad window.
+    # If there are multiple scratchpad windows, this command cycles through them.
+    $mybind $mod+minus scratchpad show
+#
+# Media bindings
+#
+$mybind XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
+$mybind XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
+$mybind XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
+$mybind XF86AudioMicMute exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
+$mybind XF86MonBrightnessDown exec brightnessctl set 5%-
+$mybind XF86MonBrightnessUp exec brightnessctl set +5%
+$mybind XF86AudioPlay exec playerctl play-pause
+$mybind XF86AudioNext exec playerctl next
+$mybind XF86AudioPrev exec playerctl previous
+$mybind XF86Search exec bemenu-run
+
+
+#
+# Resizing containers:
+#
+mode "resize" {
+    # left will shrink the containers width
+    # right will grow the containers width
+    # up will shrink the containers height
+    # down will grow the containers height
+    $mybind $left resize shrink width 10px
+    $mybind $down resize grow height 10px
+    $mybind $up resize shrink height 10px
+    $mybind $right resize grow width 10px
+
+    # Ditto, with arrow keys
+    $mybind Left resize shrink width 10px
+    $mybind Down resize grow height 10px
+    $mybind Up resize shrink height 10px
+    $mybind Right resize grow width 10px
+
+    # Return to default mode
+    $mybind Return mode "default"
+    $mybind Escape mode "default"
+}
+$mybind $mod+r mode "resize"
+
+#
+# Status Bar:
+#
+# Read `man 5 sway-bar` for more information about this section.
+bar {
+    swaybar_command waybar
+}
+# bar {
+#     position top
+# 
+#     # When the status_command prints a new line to stdout, swaybar updates.
+#     # The default just shows the current date and time.
+#     status_command while date +'%Y-%m-%d %l:%M:%S %p'; do sleep 1; done
+# 
+#     colors {
+#         statusline #ffffff
+#         background #323232
+#         inactive_workspace #32323200 #32323200 #5c5c5c
+#     }
+# }
+
+
+#
+# Borders
+#
+
+# A 10-pixel border around every window.
+gaps inner 4
+
+# Removes the title bar of each window.
+default_border pixel 1
+default_floating_border normal
+
+# Hide borders
+hide_edge_borders none
+
+# change borders
+$mybind $mod+u border none
+$mybind $mod+y border pixel 1
+$mybind $mod+n border normal
+
+#
+# Start apps
+#
+$mybind $mod+F2 exec chromium
+$mybind $mod+F3 exec thunar
+$mybind $mod+Shift+s exec slurp | grim -g - - | wl-copy
+
+exec --no-startup-id /home/lexx/.local/bin/sway-xkb-switcher
+exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
+exec --no-startup-id nm-applet --indicator
+exec udiskie --appindicator -t
+
+include /etc/sway/config.d/*
