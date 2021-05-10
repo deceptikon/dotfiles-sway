@@ -53,6 +53,21 @@ window#waybar {
   padding: 6px 2px 2px;
 }
 
+
+#idle_inhibitor {
+  color: #EEEEEE;
+  border-top: 1px solid #EEEEEE;
+  margin-top: 0px;
+  padding: 6px 2px 2px;
+}
+
+#custom-dunst {
+  color: #EEEEEE;
+  border-top: 1px solid #EEEEEE;
+  margin-top: 0px;
+  padding: 6px 2px 2px;
+}
+
 #custom-checkupdates.notify {
   color: red;
   border-top: 2px solid red;
