@@ -1,9 +1,3 @@
-# Default config for sway
-#
-# Copy this to ~/.config/sway/config and edit it to your liking.
-#
-# Read `man 5 sway` for a complete reference.
-
 ### Variables
 #
 # Logo key. Use Mod1 for Alt.
@@ -232,6 +226,8 @@ input type:keyboard {
 
 # switch to workspace with urgent window automatically
 for_window [urgent=latest] focus
+
+for_window [shell=".*"] title_format "%title :: %shell"
 #
 # Layout stuff:
 #
@@ -275,13 +271,13 @@ for_window [urgent=latest] focus
 $mybind XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
 $mybind XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
 $mybind XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
-$mybind XF86AudioMicMute exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
+# $mybind XF86AudioMicMute exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
 $mybind XF86MonBrightnessDown exec brightnessctl set 5%-
 $mybind XF86MonBrightnessUp exec brightnessctl set +5%
 $mybind XF86AudioPlay exec playerctl play-pause
 $mybind XF86AudioNext exec playerctl next
 $mybind XF86AudioPrev exec playerctl previous
-$mybind XF86Search exec bemenu-run
+# $mybind XF86Search exec bemenu-run
 
 
 #
@@ -316,6 +312,9 @@ $mybind $mod+r mode "resize"
 bar {
     swaybar_command waybar
 }
+# for some reason second waybar works only this way
+exec waybar -c ~/.config/waybar/config-right
+
 # bar {
 #     position top
 # 
@@ -330,6 +329,12 @@ bar {
 #     }
 # }
 
+#
+# dunst notifier
+#
+$mybind Ctrl+Space exec dunstctl close
+$mybind Ctrl+Shift+Space exec dunstctl close-all
+$mybind Ctrl+grave exec dunstctl history-pop
 
 #
 # Borders
@@ -354,12 +359,15 @@ $mybind $mod+n border normal
 # Start apps
 #
 $mybind $mod+F2 exec chromium
+$mybind $mod+Shift+F2 exec google-chrome-unstable
 $mybind $mod+F3 exec thunar
-$mybind $mod+Shift+s exec slurp | grim -g - - | wl-copy
+$mybind $mod+F4 exec code-wayland
+$mybind $mod+Shift+s exec slurp | grim -g - - | wl-copy # screenshot selected area and put to clipboard
 
 exec --no-startup-id /home/lexx/.local/bin/sway-xkb-switcher
 exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 exec --no-startup-id nm-applet --indicator
 exec udiskie --appindicator -t
+exec dunst &
 
 include /etc/sway/config.d/*

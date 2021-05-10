@@ -1,20 +1,20 @@
 {
     "layer": "top",
-    "position": "top",
+    "position": "right",
     "height": 25,
-    "modules-left": ["battery", "network", "clock", "custom/lang", "pulseaudio"],
-    "modules-center": ["sway/window"],
-    "modules-right": ["sway/mode", "sway/workspaces"],
+    "width": 40,
+    "modules-left": ["tray"],
+    "modules-center": ["temperature", "cpu", "memory"],
+    "modules-right": ["idle_inhibitor", "custom/dunst", "custom/checkupdates"],
     "sway/workspaces": {
         "disable-scroll": true,
-        "disable-click": false,
+        "disable-click": true,
     },
     "tray": {
         "spacing": 10,
     },
     "clock": {
-        "format": "{:%d %b   %H:%M}",
-        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
+        "format": "{:%Y %b %d %R}"
     },
     "custom/japan": {
         "format": "{}",
@@ -22,14 +22,14 @@
         "interval": 30,
     },
     "cpu": {
-        "format": " {usage}%"
+        "format": "\n{usage}%"
     },
     "memory": {
-        "format": " {}%"
+        "format": "\n{}%"
     },
     "temperature": {
         "critical-threshold": 75,
-        "format": " {temperatureC}°C"
+        "format": "\n{temperatureC}°C"
     },
     "battery": {
         "bat": "BAT0",
@@ -39,7 +39,7 @@
             "warning": 30,
             "critical": 15
         },
-        "format": "{icon} {capacity}%",
+        "format": "{icon}\n{capacity}%",
         "format-icons": ["", "", "", "", ""]
     },
     "network": {
@@ -76,13 +76,11 @@
       "format": " {}"
     },
     "custom/dunst": {
-      "format": "{} - {icon}",
-      "exec": "[[ dunstctl is-paused ]] && echo 'yes' || echo 'no'",
-      "return-type": "json",
-      "interval": 7200,
-      "format": " {}",
-      "on-click": "kitty -e pamac upgrade && pkill -SIGRTMIN+8 waybar",
-      "signal": 8
+      "exec": "~/.config/toggleDunst.sh refresh",
+      "interval": 10,
+      "format": " {}",
+      "on-click": "~/.config/toggleDunst.sh && pkill -SIGRTMIN+9 waybar",
+      "signal": 9
     },
     "custom/ddcutil": {
       "format": "{percentage}% {icon}",
