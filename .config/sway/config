@@ -11,12 +11,32 @@ set $right l
 set $term kitty
 # layout insensitive binding
 set $mybind bindsym --to-code
+set $swayr env RUST_BACKTRACE=1 /home/lexx/swayr/target/debug/swayr
+exec env RUST_BACKTRACE=1 swayrd > /tmp/swayrd.log 2>&1
 
 # Your preferred application launcher
 # Note: pass the final command to swaymsg so that the resulting window can be opened
 # on the original workspace that the command was run on.
 # set $menu dmenu_path | dmenu | xargs swaymsg exec --
 set $menu wofi --show=drun --lines=8 --prompt=""
+
+set $locker 'swaylock \
+        --screenshots \
+        --clock \
+        --indicator \
+        --indicator-idle-visible \
+        --indicator-radius 200 \
+        --indicator-thickness 4 \
+        --effect-blur 7x5 \
+        --effect-vignette 0.5:0.5 \
+        --ring-color 228b22 \
+        --key-hl-color 228b22 \
+        --line-color 00000000 \
+        --inside-color 00000022 \
+        --separator-color 00000000 \
+        --effect-greyscale \
+        --grace 10 \
+        --fade-in 0.2'
 
 font pango:TerminessTTF Nerd Font Mono 14px
 
@@ -36,24 +56,9 @@ output DP-1 mode 2560x1440 position 1600,0
 #
 # Example configuration:
 #
-exec swayidle -w \
-         timeout 300 'swaylock \
-	--screenshots \
-	--clock \
-	--indicator \
-	--indicator-radius 80 \
-	--indicator-thickness 4 \
-	--effect-blur 7x5 \
-	--effect-vignette 0.5:0.5 \
-	--ring-color bb00cc \
-	--key-hl-color 880033 \
-	--line-color 00000000 \
-	--inside-color 00000088 \
-	--separator-color 00000000 \
-	--grace 10 \
-	--fade-in 0.2' \
-         timeout 600 'swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"' \
-         before-sleep 'swaylock -f -c 000000'
+exec swayidle -w timeout 300 $locker timeout 500 'swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"' before-sleep $locker
+
+$mybind $mod+Escape exec $locker
 #
 # This will lock your screen after 300 seconds of inactivity, then turn off
 # your displays after another 300 seconds, and turn your screens back on when
@@ -89,6 +94,9 @@ input type:keyboard {
 
     # Start your launcher
     $mybind $mod+space exec $menu
+
+    # shutdown menu
+    $mybind $mod+Print exec ~/.config/shutdown-dmenu.sh
 
     # Drag floating windows by holding down $mod and left mouse button.
     # Resize them with right mouse button + $mod.
@@ -191,11 +199,12 @@ input type:keyboard {
 
     # Open specific applications in floating mode
     for_window [title="alsamixer"] floating enable border pixel 1
+    for_window [app_id="thunar" title="File operation progress"] floating enable border normal
     for_window [app_id="nm-connection-editor"] floating enable border normal
     for_window [app_id="pavucontrol"] floating enable
     for_window [class="Clipgrab"] floating enable
     for_window [title="File Transfer*"] floating enable
-    for_window [class="fpakman"] floating enable
+    for_window [app_id="zenity"] floating enable
     for_window [class="Galculator"] floating enable border pixel 1
     for_window [class="GParted"] floating enable border normal
     for_window [title="i3_help"] floating enable sticky enable border normal
@@ -249,7 +258,7 @@ for_window [shell=".*"] title_format "%title :: %shell"
     $mybind $mod+Shift+space floating toggle
 
     # Swap focus between the tiling area and the floating area
-    # $mybind $mod+space focus mode_toggle
+    $mybind $mod+Ctrl+space focus mode_toggle
 
     # Move focus to the parent container
     $mybind $mod+a focus parent
@@ -268,12 +277,24 @@ for_window [shell=".*"] title_format "%title :: %shell"
 #
 # Media bindings
 #
-$mybind XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
-$mybind XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
-$mybind XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
+# $mybind XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
+# $mybind XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
+# $mybind XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
 # $mybind XF86AudioMicMute exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
-$mybind XF86MonBrightnessDown exec brightnessctl set 5%-
-$mybind XF86MonBrightnessUp exec brightnessctl set +5%
+
+$mybind XF86AudioRaiseVolume exec pamixer -ui 2 && pamixer --get-volume > $SWAYSOCK.wob
+$mybind XF86AudioLowerVolume exec pamixer -ud 2 && pamixer --get-volume > $SWAYSOCK.wob
+$mybind XF86AudioMute exec pamixer --toggle-mute && ( pamixer --get-mute && echo 0 > $SWAYSOCK.wob ) || pamixer --get-volume > $SWAYSOCK.wob
+
+# $mybind XF86MonBrightnessDown exec brightnessctl set 5%-
+# $mybind XF86MonBrightnessUp exec brightnessctl set +5%
+$mybind XF86MonBrightnessDown exec brightnessctl set 5%- | sed -En 's/.*\(([0-9]+)%\).*/\1/p' > $SWAYSOCK.wob
+$mybind Shift+XF86MonBrightnessDown exec brightnessctl set 1%- | sed -En 's/.*\(([0-9]+)%\).*/\1/p' > $SWAYSOCK.wob
+$mybind Ctrl+Shift+XF86MonBrightnessDown exec brightnessctl set 20 | sed -En 's/.*\(([0-9]+)%\).*/\1/p' > $SWAYSOCK.wob
+
+$mybind XF86MonBrightnessUp exec brightnessctl set +5% | sed -En 's/.*\(([0-9]+)%\).*/\1/p' > $SWAYSOCK.wob
+$mybind Shift+XF86MonBrightnessUp exec brightnessctl set +1% | sed -En 's/.*\(([0-9]+)%\).*/\1/p' > $SWAYSOCK.wob
+$mybind Ctrl+Shift+XF86MonBrightnessUp exec brightnessctl set $(brightnessctl max) | sed -En 's/.*\(([0-9]+)%\).*/\1/p' > $SWAYSOCK.wob
 $mybind XF86AudioPlay exec playerctl play-pause
 $mybind XF86AudioNext exec playerctl next
 $mybind XF86AudioPrev exec playerctl previous
@@ -304,6 +325,33 @@ mode "resize" {
     $mybind Escape mode "default"
 }
 $mybind $mod+r mode "resize"
+$mybind $mod+Tab exec $swayr next-window >> /tmp/swayr.log 2>&1
+$mybind $mod+Shift+Tab exec $swayr prev-window >> /tmp/swayr.log 2>&1
+
+#
+# mode for swaynagmode - swaynag wrapper to accept keyboard commands
+#
+set $nag exec swaynagmode
+mode "nag" {
+  bindsym {
+    Ctrl+d    mode "default"
+
+    Ctrl+c    $nag --exit
+    q         $nag --exit
+    Escape    $nag --exit
+
+    Return    $nag --confirm
+
+    Tab       $nag --select prev
+    Shift+Tab $nag --select next
+
+    Left      $nag --select next
+    Right     $nag --select prev
+
+    Up        $nag --select next
+    Down      $nag --select prev
+  }
+}
 
 #
 # Status Bar:
@@ -312,22 +360,9 @@ $mybind $mod+r mode "resize"
 bar {
     swaybar_command waybar
 }
-# for some reason second waybar works only this way
-exec waybar -c ~/.config/waybar/config-right
+# toggle waybar visibility
+$mybind $mod+x exec killall -SIGUSR1 waybar
 
-# bar {
-#     position top
-# 
-#     # When the status_command prints a new line to stdout, swaybar updates.
-#     # The default just shows the current date and time.
-#     status_command while date +'%Y-%m-%d %l:%M:%S %p'; do sleep 1; done
-# 
-#     colors {
-#         statusline #ffffff
-#         background #323232
-#         inactive_workspace #32323200 #32323200 #5c5c5c
-#     }
-# }
 
 #
 # dunst notifier
@@ -356,6 +391,11 @@ $mybind $mod+y border pixel 1
 $mybind $mod+n border normal
 
 #
+# name me
+#
+$mybind Ctrl+$mod+grave exec ~/.config/toggleDunst.sh && pkill -SIGRTMIN+9 waybar
+
+#
 # Start apps
 #
 $mybind $mod+F2 exec chromium
@@ -363,11 +403,15 @@ $mybind $mod+Shift+F2 exec google-chrome-unstable
 $mybind $mod+F3 exec thunar
 $mybind $mod+F4 exec code-wayland
 $mybind $mod+Shift+s exec slurp | grim -g - - | wl-copy # screenshot selected area and put to clipboard
+exec mkfifo $SWAYSOCK.wob && tail -f $SWAYSOCK.wob | wob
 
 exec --no-startup-id /home/lexx/.local/bin/sway-xkb-switcher
 exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 exec --no-startup-id nm-applet --indicator
-exec udiskie --appindicator -t
-exec dunst &
+exec --no-startup-id udiskie --appindicator -t
+exec --no-startup-id dunst &
+exec --no-startup-id libinput-gestures &
+exec --no-startup-id blueman-applet &
+# exec gammastep &
 
 include /etc/sway/config.d/*

@@ -6,10 +6,16 @@ fi
 
 status=`dunstctl is-paused`
 
+
 if [ "$status" = "false" ]; then
-  echo ''
+  tooltip=`dunstctl count | tr '\n' ' '`
+  echo '{"text":"","tooltip":"Notifications: '$tooltip'","class":"on"}' | jq --compact-output
 else
   unread=`dunstctl count waiting`
-  echo "$unread"
+  echo '{"text":" '$unread'","tooltip":"Notifications paused, '$unread' new","class":"paused"}' | jq --compact-output
 fi
 
+
+if [ "$1" != "refresh" ]; then
+  pkill -SIGRTMIN+9 waybar
+fi

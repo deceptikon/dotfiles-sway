@@ -1,16 +1,28 @@
+[
 {
     "layer": "top",
     "position": "top",
     "height": 25,
-    "modules-left": ["battery", "network", "clock", "custom/lang", "pulseaudio"],
+    "modules-left": ["battery", "network", "bluetooth", "temperature", "cpu", "memory"],
     "modules-center": ["sway/window"],
-    "modules-right": ["sway/mode", "sway/workspaces"],
-    "sway/workspaces": {
-        "disable-scroll": true,
-        "disable-click": false,
+    "modules-right": ["sway/mode", "pulseaudio", "backlight", "clock"],
+    "sway/mode": {
+        "format": " {}",
+        "max-length": 50
     },
+    "sway/window": {
+        "format": "{}",
+        "max-length": 100,
+        "rewrite": {
+           "(.*) - Mozilla Firefox": "🌎 $1",
+           "(.*) - vim": " $1",
+           "(.*) - zsh": " [$1]"
+        }
+    },
+
     "tray": {
-        "spacing": 10,
+      "icon-size": 12,
+      "spacing": 5,
     },
     "clock": {
         "format": "{:%d %b   %H:%M}",
@@ -31,13 +43,30 @@
         "critical-threshold": 75,
         "format": " {temperatureC}°C"
     },
+    "backlight": {
+        "device": "intel_backlight",
+        "format": "{icon} {percent}%",
+        "on-scroll-up": "exec brightnessctl set 1%+",
+        "on-scroll-down": "exec brightnessctl set 1%-",
+        "format-icons": ["", "", "", "", ""],
+        "smooth-scrolling-threshold": 1.5
+    },
+    "bluetooth": {
+        "format": "{icon}",
+        "format-icons": {
+          "enabled": " ",
+          "disabled": " "
+        },
+        "tooltip-format": "{}",
+        "on-click": "blueman-manager"
+    },
     "battery": {
         "bat": "BAT0",
         "full-at": 95,
         "states": {
-            "good": 95,
-            "warning": 30,
-            "critical": 15
+            "good": 70,
+            "warning": 15,
+            "critical": 5
         },
         "format": "{icon} {capacity}%",
         "format-icons": ["", "", "", "", ""]
@@ -49,9 +78,95 @@
     "custom/checkupdates": {
       "exec": "~/.config/checkupdates.sh",
       "return-type": "json",
-      "interval": 7200,
+      "interval": 36000,
       "format": " {}",
-      "on-click": "kitty -e pamac upgrade && pkill -SIGRTMIN+8 waybar",
+      "on-click": "kitty -e yay -Syyu && pkill -SIGRTMIN+8 waybar",
+      "signal": 8
+    },
+    "pulseaudio": {
+        "format": "{icon} {volume}%",
+        "format-muted": " ",
+        "format-icons": {
+            "headphones": "",
+            "default": ["" , "", ""]
+        },
+        "on-click": "pavucontrol"
+    },
+    "idle_inhibitor": {
+        "format": "{icon}",
+        "format-icons": {
+            "activated": "",
+            "deactivated": ""
+        }
+    },
+    "custom/ddcutil": {
+      "format": "{percentage}% {icon}",
+      "interval": 1,
+      "format-icons": ["", "", ""],
+      "exec": "~/.config/waybar-ddcutil.py",
+      "return-type": "json"
+    },
+},
+{
+    "layer": "top",
+    "position": "right",
+    "height": 25,
+    "width": 30,
+    "modules-left": ["sway/workspaces"],
+    "modules-center": ["tray"],
+    "modules-right": ["custom/lang", "idle_inhibitor", "custom/dunst", "custom/checkupdates", "custom/powerbtn"],
+    "sway/workspaces": {
+        "disable-scroll": false,
+        "enable-bar-scroll": true,
+        "smooth-scrolling-threshold": 6,
+        "disable-scroll-wraparound": true,
+        "disable-click": false,
+    },
+    "tray": {
+        "spacing": 10,
+    },
+    "clock": {
+        "format": "{:%Y %b %d %R}"
+    },
+    "cpu": {
+        "format": " {usage}%",
+        "rotate": 45
+    },
+    "memory": {
+        "format": " {}%",
+        "rotate": 45
+    },
+    "temperature": {
+        "hwmon-path": "/sys/class/hwmon/hwmon6/temp1_input",
+        "critical-threshold": 75,
+        "format": " {temperatureC}°<small><small>C</small></small>",
+        "rotate": 45
+    },
+    "battery": {
+        "bat": "BAT0",
+        "full-at": 95,
+        "states": {
+            "good": 95,
+            "warning": 30,
+            "critical": 15
+        },
+        "format": "{icon}\n{capacity}%",
+        "format-icons": ["", "", "", "", ""]
+    },
+    "network": {
+        "format-wifi": " {essid}",
+        "format-disconnected": "⚠ Disconnected"
+    },
+    "custom/powerbtn": {
+        "format": " {}",
+        "on-click": "exec ~/.config/shutdown-dmenu.sh",
+    },
+    "custom/checkupdates": {
+      "exec": "~/.config/checkupdates.sh",
+      "return-type": "json",
+      "interval": 7200,
+      "format": "{}",
+      "on-click": "kitty -e yay -Syyu && pkill -SIGRTMIN+8 waybar",
       "signal": 8
     },
     "pulseaudio": {
@@ -73,16 +188,15 @@
     "custom/lang": {
       "exec": "swaymsg -t get_inputs | grep layout_name | grep -v En | awk 'END{if(NR == 0){print \"EN\"}else{print toupper(substr($2,2,2))}}'",
       "interval": 1,
-      "format": " {}"
+      "format": "{}"
     },
     "custom/dunst": {
-      "format": "{} - {icon}",
-      "exec": "[[ dunstctl is-paused ]] && echo 'yes' || echo 'no'",
+      "exec": "~/.config/toggleDunst.sh refresh",
       "return-type": "json",
-      "interval": 7200,
-      "format": " {}",
-      "on-click": "kitty -e pamac upgrade && pkill -SIGRTMIN+8 waybar",
-      "signal": 8
+      "interval": 1000,
+      "format": "{}",
+      "on-click": "~/.config/toggleDunst.sh",
+      "signal": 9
     },
     "custom/ddcutil": {
       "format": "{percentage}% {icon}",
@@ -92,3 +206,4 @@
       "return-type": "json"
     },
 }
+]

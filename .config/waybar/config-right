@@ -4,7 +4,7 @@
     "height": 25,
     "width": 40,
     "modules-left": ["tray"],
-    "modules-center": ["temperature", "cpu", "memory"],
+    "modules-center": ["temperature", "cpu", "memory", "sway/workspaces"],
     "modules-right": ["idle_inhibitor", "custom/dunst", "custom/checkupdates"],
     "sway/workspaces": {
         "disable-scroll": true,
@@ -22,7 +22,8 @@
         "interval": 30,
     },
     "cpu": {
-        "format": "\n{usage}%"
+        "format": " {usage}%",
+        "rotate": 270
     },
     "memory": {
         "format": "\n{}%"
