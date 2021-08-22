@@ -4,7 +4,7 @@
     "position": "top",
     "height": 25,
     "modules-left": ["battery", "network", "bluetooth", "temperature", "cpu", "memory"],
-    "modules-center": ["sway/window"],
+    "modules-center": ["sway/window", "custom/waybar-media"],
     "modules-right": ["sway/mode", "pulseaudio", "backlight", "clock"],
     "sway/mode": {
         "format": " {}",
@@ -12,14 +12,22 @@
     },
     "sway/window": {
         "format": "{}",
-        "max-length": 100,
+        "max-length": 80,
         "rewrite": {
-           "(.*) - Mozilla Firefox": "🌎 $1",
+           "(.*) - Firefox Developer Edition": "🌎 $1",
            "(.*) - vim": " $1",
-           "(.*) - zsh": " [$1]"
+           "(.*) - zsh": " [$1]",
+           "^zsh$": ""
         }
     },
-
+    "custom/waybar-media": {
+        "return-type": "json",
+        "exec": "waybar-media.py status",
+        "on-click": "waybar-media.py playpause",
+        "on-scroll-up": "waybar-media.py previous",
+        "on-scroll-down": "waybar-media.py next",
+        "escape": true
+    },
     "tray": {
       "icon-size": 12,
       "spacing": 5,
@@ -46,16 +54,18 @@
     "backlight": {
         "device": "intel_backlight",
         "format": "{icon} {percent}%",
-        "on-scroll-up": "exec brightnessctl set 1%+",
-        "on-scroll-down": "exec brightnessctl set 1%-",
+        "on-scroll-up": "exec brightnessctl set 10%+",
+        "on-scroll-down": "exec brightnessctl set 10%-",
+        "on-click":"exec brightnessctl set 100%",
+        "on-click-right":"exec brightnessctl set 20",
         "format-icons": ["", "", "", "", ""],
         "smooth-scrolling-threshold": 1.5
     },
     "bluetooth": {
         "format": "{icon}",
         "format-icons": {
-          "enabled": " ",
-          "disabled": " "
+          "enabled": " ",
+          "disabled": " "
         },
         "tooltip-format": "{}",
         "on-click": "blueman-manager"
@@ -85,12 +95,22 @@
     },
     "pulseaudio": {
         "format": "{icon} {volume}%",
+        "format-bluetooth": "{volume}% {icon}",
         "format-muted": " ",
         "format-icons": {
             "headphones": "",
+            "handsfree": "",
+            "headset": "",
+            "phone": "",
+            "portable": "",
+            "car": "",
             "default": ["" , "", ""]
         },
-        "on-click": "pavucontrol"
+        "on-click": "pamixer --toggle-mute && ( pamixer --get-mute && echo 0 > $SWAYSOCK.wob ) || pamixer --get-volume > $SWAYSOCK.wob",
+        "on-click-right": "pavucontrol",
+        "on-scroll-up": "pamixer -ui 5 && pamixer --get-volume > $SWAYSOCK.wob",
+        "on-scroll-down": "pamixer -ud 5 && pamixer --get-volume > $SWAYSOCK.wob",
+        "smooth-scrolling-threshold": 0.9
     },
     "idle_inhibitor": {
         "format": "{icon}",
@@ -117,9 +137,24 @@
     "modules-right": ["custom/lang", "idle_inhibitor", "custom/dunst", "custom/checkupdates", "custom/powerbtn"],
     "sway/workspaces": {
         "disable-scroll": false,
-        "enable-bar-scroll": true,
+        "enable-bar-scroll": true ,
+        "disable-auto-back-and-forth": true,
         "smooth-scrolling-threshold": 6,
         "disable-scroll-wraparound": true,
+        "format": "{icon}",
+        "format-icons": {
+          "0": "",
+          "1": "",
+          "2": "",
+          "3": "",
+          "4": "",
+        }, // missed a comma right here
+        "persistent_workspaces": {
+          "1": [],
+          "2": [],
+          "3": [],
+          "4": []
+        },
         "disable-click": false,
     },
     "tray": {

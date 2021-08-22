@@ -53,7 +53,7 @@ choice_by_zenity
 # execute the choice in background
 
 case "$choice" in
-  "Hibernate") notify-send "Hibernating..." && systemctl hibernate;;
+  "Hibernate") systemctl hibernate;;
   "Suspend") notify-send "Suspending..." && systemctl suspend;;
   "Reboot") sudo shutdown -r now & ;;
   "Poweroff") sudo shutdown -h now & ;;

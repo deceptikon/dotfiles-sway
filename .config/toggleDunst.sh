@@ -12,7 +12,7 @@ if [ "$status" = "false" ]; then
   echo '{"text":"","tooltip":"Notifications: '$tooltip'","class":"on"}' | jq --compact-output
 else
   unread=`dunstctl count waiting`
-  echo '{"text":" '$unread'","tooltip":"Notifications paused, '$unread' new","class":"paused"}' | jq --compact-output
+  echo '{"text":"<small> '$unread'</small>","tooltip":"Notifications paused, '$unread' new","class":"paused"}' | jq --compact-output
 fi
 
 

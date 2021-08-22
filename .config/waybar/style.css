@@ -2,7 +2,7 @@
     border: none;
     border-radius: 0;
     font-family: "Source Code Pro";
-    font-weight: bold;
+    font-weight: 500;
     min-height: 0;
 }
 
@@ -13,7 +13,7 @@ window#waybar {
 
 
 #workspaces {
-    padding: 0 3px;
+  padding: 3px;
 }
 
 #workspaces button {
@@ -21,7 +21,7 @@ window#waybar {
     padding: 3px 1px;
     background: transparent;
     color: white;
-    font-size: 14px;
+    font-size: 16px;
     border-top: 1px solid transparent;
 }
 
@@ -32,8 +32,15 @@ window#waybar {
   border-radius: 11px;
 }
 
+#workspaces button.urgent {
+  color: coral;
+  background: rgba(0, 128, 128,0.2);
+  border: 1px solid coral;
+  border-radius: 11px;
+}
+
 #temperature, #backlight, #clock, #battery, #cpu, #memory, #network, #pulseaudio, #bluetooth, #mode {
-    font-size: 12px;
+    font-size: 13px;
     padding: 0 5px;
     margin-right: 20px;
     margin-top: 1px;
@@ -114,15 +121,15 @@ window#waybar {
   border-color: coral;
   background: rgba(255, 255, 255, 0.1);
   color: coral;
-  font-size: 9px;
-  padding: 0;
+  font-size: 11px;
+  padding: 0 2px
 }
 
 
 #custom-dunst.paused {
   color: coral;
   font-size: 12px;
-  border-top: 2px solid coral;
+  border-color: coral;
   background: rgba(255, 255, 255, 0.1);
 }
 
