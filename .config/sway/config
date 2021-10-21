@@ -221,7 +221,7 @@ input type:keyboard {
 
     for_window [app_id="telegramdesktop"] floating enable
     for_window [app_id="telegramdesktop" title="Telegram"] move scratchpad
-    assign [app_id="Google-chrome"] -> $ws1
+    assign [app_id="Google-chrome"] $ws1
     assign [app_id="Code"] $ws2
     assign [class="GitAhead"] $ws3
     assign [class="Slack"] $ws4
