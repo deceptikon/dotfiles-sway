@@ -1,7 +1,7 @@
 window {
     margin: 5px;
     border: 2px solid white;
-    background-color: rgba(44,62,80,0.8);
+    background-color: rgba(44,62,80,1.0);
     /* background: transparent; */
     /* background: transparent; */
 }
@@ -41,13 +41,14 @@ window {
 }
 
 #entry:selected {
-    background-color: rgba(0,0,0,0);
+    background-color: rgba(0,0,0,0.7);
     /* text-decoration: underline; */
     /* text-decoration-color: white; */
 }
 
 #text:selected {
      /* background-color: red; */
-    text-decoration: underline;
-    text-decoration-color: white;
+    color: rgba(243,208,0,0.8);
+    #text-decoration: underline;
+    #text-decoration-color: white;
 }

@@ -126,6 +126,9 @@ window#waybar {
 }
 
 
+#custom-dunst.on {
+  font-size: 12px;
+}
 #custom-dunst.paused {
   color: coral;
   font-size: 12px;
