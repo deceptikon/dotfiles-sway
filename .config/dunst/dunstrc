@@ -88,7 +88,8 @@
     idle_threshold = 120
 
     ### Text ###
-    font = TerminessTTF Nerd Font Mono 10
+    font = Fira Code 10
+    #font = TerminessTTF Nerd Font Mono 10
     #font = Monospace 8
 
     # The spacing between lines.  If the height is smaller than the
@@ -133,12 +134,12 @@
 
     # Alignment of message text.
     # Possible values areframe "left", "center" and "right".
-    alignment = right
+    alignment = left
 
     # Show age of message if message is older than show_age_threshold
     # seconds.
     # Set to -1 to disable.
-    show_age_threshold = 60
+    show_age_threshold = 300
 
     # Split notifications into multiple lines if they don't fit into
     # geometry.
@@ -179,7 +180,7 @@
     sticky_history = yes
 
     # Maximum amount of notifications kept in history
-    history_length = 150
+    history_length = 250
 
     ### Misc/Advanced ###
 
@@ -225,28 +226,6 @@
     # where there are multiple screens with very different dpi values.
     per_monitor_dpi = false
 
-[shortcuts]
-
-    # Shortcuts are specified as [modifier+][modifier+]...key
-    # Available modifiers are "ctrl", "mod1" (the alt-key), "mod2",
-    # "mod3" and "mod4" (windows-key).
-    # Xev might be helpful to find names for keys.
-
-    # Close notification.
-    close = ctrl+space
-
-    # Close all notifications.
-    close_all = ctrl+shift+space
-
-    # Redisplay last message(s).
-    # On the US keyboard layout "grave" is normally above TAB and left
-    # of "1". Make sure this key actually exists on your keyboard layout,
-    # e.g. check output of 'xmodmap -pke'
-    history = ctrl+grave
-
-    # Context menu.
-    context = ctrl+shift+period
-
 [urgency_low]
     # IMPORTANT: colors have to be defined in quotation marks.
     # Otherwise the "#" and following would be interpreted as a comment.
@@ -257,16 +236,16 @@
     #icon = /path/to/icon
 
 [urgency_normal]
-    background = "#000000"
+    background = "#222222DD"
     foreground = "#ffffff"
     timeout = 10
     # Icon for notifications with normal urgency, uncomment to enable
     #icon = /path/to/icon
 
 [urgency_critical]
-    background = "#900000"
+    background = "#5B0D22"
     foreground = "#ffffff"
-    frame_color = "#ff0000"
+    frame_color = "#900000"
     timeout = 0
     # Icon for notifications with critical urgency, uncomment to enable
     #icon = /path/to/icon
@@ -292,12 +271,12 @@
 
 [play_sound]
     desktop_entry = "telegramdesktop"
-    timeout = 15000
+    timeout = 600
     script = ~/.config/dunst/alert.sh
 
 [play_sound2]
     desktop_entry = "Slack"
-    timeout = 15000
+    urgency = critical
     script = ~/.config/dunst/alert.sh
 
 [yandex_music]
@@ -305,6 +284,18 @@
     body = "*>music.yandex.ru<*"
     background = "#BE9306DD"
     # background = "#004D40CC"
+    urgency = low
+    history_ignore = yes
+
+[service_messages]
+    appname="poweralertd"
+    background = "#004D40CC"
+    urgency = low
+    history_ignore = yes
+
+[service_messages2]
+    desktop_entry = "nm-applet"
+    background = "#004D40CC"
     urgency = low
     history_ignore = yes
 
