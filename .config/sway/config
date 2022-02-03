@@ -28,7 +28,10 @@ font pango:TerminessTTF Nerd Font Mono 14px
 ### Output configuration
 #
 # Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
-output * bg /home/lexx/Pictures/bg3.jpg fill
+#output * bg /home/lexx/Pictures/wallpapers/bg3.jpg fill
+
+set $BGGPATH ~/Pictures/wallpapers
+set $bgrand swaybg -i $(find $BGPATH/. -type f | shuf -n1) -m fill &
 #
 # Example configuration:
 #
@@ -55,6 +58,7 @@ input type:keyboard {
 # You can get the names of your inputs by running: swaymsg -t get_inputs
 # Read `man 5 sway-input` for more information about this section.
 
+$mybind $mod+Shift+b exec $bgrand
 ### Key bindings
 #
 # mouse with numpad
