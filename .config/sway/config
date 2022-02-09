@@ -30,8 +30,8 @@ font pango:TerminessTTF Nerd Font Mono 14px
 # Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
 #output * bg /home/lexx/Pictures/wallpapers/bg3.jpg fill
 
-set $BGGPATH ~/Pictures/wallpapers
-set $bgrand swaybg -i $(find $BGPATH/. -type f | shuf -n1) -m fill &
+#set $BGPATH ~/Pictures/wallpapers
+set $bgrand ~/.config/bgswitcher.sh
 #
 # Example configuration:
 #
@@ -478,6 +478,7 @@ exec --no-startup-id dunst &
 exec --no-startup-id ydotoold &
 exec --no-startup-id libinput-gestures &
 exec --no-startup-id poweralertd &
+exec --no-startup-id $bgrand &
 # exec --no-startup-id autotiling &
 exec --no-startup-id $idlelock
 # exec --no-startup-id blueman-applet &

@@ -2,6 +2,7 @@
 if [ "$(tty)" = "/dev/tty1" ]; then
   export XDG_CURRENT_DESKTOP=Unity
   export MOZ_ENABLE_WAYLAND=1
+  export BGPATH="~/Pictures/wallpapers/"
   export PATH="${PATH}:/home/lexx/.local/bin"
   exec sway
 fi
