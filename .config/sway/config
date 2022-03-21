@@ -450,19 +450,25 @@ set $locker 'swaylock \
         --timestr %H:%M \
         --indicator \
         --indicator-idle-visible \
-        --indicator-radius 200 \
-        --indicator-thickness 8 \
-        --effect-pixelate 4 \
+        --indicator-radius 180 \
+        --indicator-thickness 20 \
+        --effect-vignette 1.0:0.1 \
         --effect-greyscale \
+        --effect-blur 4x3 \
+        --ring-color ffcc00 \
+        --key-hl-color 880033 \
+        --line-color 00000000 \
+        --inside-color 00000088 \
+        --separator-color 00000000 \
         --grace 10 \
-        --fade-in 0.2'
+        --fade-in 2'
 
 set $idlelock 'swayidle -w timeout 300 "$locker" timeout 500 "swaymsg \'output * dpms off\'" resume "swaymsg \'output * dpms on\'" before-sleep "$locker"'
 
 set $idle 'swayidle -w timeout 0 \'swaymsg "output * dpms off"\' resume \'swaymsg "output * dpms on"\' before-sleep $locker'
 exec $idlelock
 $mybind $mod+Escape exec $idle
-$mybind $mod+q exec $locke#r
+$mybind $mod+q exec $locker
 
 # $mybind $mod+q exec $idle-and-lock
 
